@@ -29,4 +29,4 @@ Enter base and value for root 6: 10 28735619654702
 Enter base and value for root 7: 14 71AB5070CC4B
 Enter base and value for root 8: 9 122662581541670
 Enter base and value for root 9: 8 642121030037605
-The constant term c of the polynomial is: 3.04
+The constant term c of the polynomial is: 2.8735619723864E13
