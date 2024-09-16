@@ -1,8 +1,10 @@
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class SecretSharing {
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -25,7 +27,7 @@ public class SecretSharing {
             int base = scanner.nextInt();
             String value = scanner.next();
             int x = i + 1; // Use i+1 as the x-coordinate based on the order of input
-            int y = decode(value, base);
+            BigInteger y = decode(value, base);
             points.add(new Point(x, y));
         }
 
@@ -40,8 +42,8 @@ public class SecretSharing {
     }
 
     // Method to decode a string from a given base to a decimal integer
-    private static int decode(String value, int base) {
-        return Integer.parseInt(value, base);
+    private static BigInteger decode(String value, int base) {
+        return new BigInteger(value, base);
     }
 
     // Method to solve the polynomial system and return coefficients
@@ -55,7 +57,7 @@ public class SecretSharing {
             for (int j = 0; j < k; j++) {
                 matrix[i][j] = Math.pow(point.x, j);
             }
-            results[i] = point.y;
+            results[i] = point.y.doubleValue(); // Convert BigInteger to double
         }
 
         // Solve the linear system using Gaussian elimination
@@ -68,6 +70,7 @@ public class SecretSharing {
 
         // Forward elimination
         for (int i = 0; i < n; i++) {
+            // Find the maximum element in column i
             int maxRow = i;
             for (int k = i + 1; k < n; k++) {
                 if (Math.abs(matrix[k][i]) > Math.abs(matrix[maxRow][i])) {
@@ -75,14 +78,14 @@ public class SecretSharing {
                 }
             }
             // Swap rows
-            double[] temp = matrix[i];
+            double[] tempRow = matrix[i];
             matrix[i] = matrix[maxRow];
-            matrix[maxRow] = temp;
+            matrix[maxRow] = tempRow;
             double tempResult = results[i];
             results[i] = results[maxRow];
             results[maxRow] = tempResult;
 
-            // Make the current row's pivot element 1
+            // Make the current row's pivot element 1 and eliminate
             for (int k = i + 1; k < n; k++) {
                 double factor = matrix[k][i] / matrix[i][i];
                 for (int j = i; j < n; j++) {
@@ -107,9 +110,9 @@ public class SecretSharing {
     // Helper class to represent a point (x, y)
     private static class Point {
         int x;
-        int y;
+        BigInteger y;
 
-        Point(int x, int y) {
+        Point(int x, BigInteger y) {
             this.x = x;
             this.y = y;
         }
